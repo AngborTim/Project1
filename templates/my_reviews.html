@@ -5,9 +5,43 @@
 {% endblock %}
 
 {% block main %}
- 
- 
- 
+
+<table class="table table-hover compact" id="my_reviews">
+    <thead>
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Author</th>
+            <th scope="col">Rating</th>
+            <th scope="col">Review</th>
+        </tr>
+    </thead>
+{% if reviews %}
+    <tbody>
+
+        {% for review in reviews %}
+        <tr class="click" onclick="document.location = '{{ url_for('books', book_id=review.book_id) }}';">
+            <td>{{ review.title }}</td>
+            <td>{{ review.author }}</td>
+            <td>
+			{% if review.rating>0 %}
+           	<div class="stars">	
+			{% for z in range(5) %}
+				{% if review.rating|int > z %}
+				<span class="starYellowOn"></span>	
+				{% else %}
+				<span class="starOff"></span>
+				{% endif %}
+			{% endfor %}
+			</div>
+			{% endif %}
+			</td>
+            <td>{{ review.review }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+ {% endif %}
+
+</table>
  
  
  

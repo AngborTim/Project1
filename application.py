@@ -63,9 +63,8 @@ def search():
 @app.route("/my_reviews", methods=["GET"])
 @login_required
 def my_reviews():
-    reviews = db.execute("SELECT * FROM reviews WHERE user_id = :user_id", {"user_id": session["user_id"]}).fetchall
+    reviews = db.execute("SELECT rew.rating as rating, rew.review as review, boo.id as book_id, boo.title as title, boo.author as author FROM books as boo, reviews as rew WHERE user_id = :user_id AND rew.book_id = boo.id", {"user_id": session["user_id"]}).fetchall()
     return render_template("my_reviews.html", reviews=reviews)
-
 
 
 @app.route("/change_review", methods=["POST"])
