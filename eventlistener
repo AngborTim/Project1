@@ -1,0 +1,17 @@
+<script>
+const stars = document.querySelectorAll(".starOff");
+
+for (const star of stars) {
+	star.addEventListener('mouseover', function (event) {
+	this.className = "starYellowOn";
+}, false);
+	star.addEventListener('mouseout', function (event) {
+	this.className = "starOff";
+}, false);
+
+}
+
+</script>
+
+
+

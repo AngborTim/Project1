@@ -1,0 +1,28 @@
+{% if message %}
+<div>Error: {{ message }}<br />Try to reload this page.</div>
+
+{% else %}
+	{% if review != None and review.rating != 0 %}
+	<div class="stars">	
+	{% for z in range(5) %}
+	{# сначала сравниваем округленный рейтинг INT с циклом #}
+		{% if review.rating|int > z %}
+		<span class="starYellowOn"></span>	
+		{% else %}
+		<span class="starOff"></span>
+		{% endif %}
+	{% endfor %}
+	</div>
+	<p><a href="#" data-rating='0' onclick="change_rating(this.getAttribute('data-rating'));" class="small_link" title="It will drop your rating">Delete your rating</a></p>
+	{% else %}
+	<div class="stars d-inline-flex flex-row-reverse">
+		<a href="#" class="star starOff" data-rating='5' onclick="change_rating(this.getAttribute('data-rating'));" title="it was amazing"></a>
+		<a href="#" class="star starOff" data-rating='4' onclick="change_rating(this.getAttribute('data-rating'));" title="really liked it"></a>
+		<a href="#" class="star starOff" data-rating='3' onclick="change_rating(this.getAttribute('data-rating'));" title="liked it"></a>
+		<a href="#" class="star starOff" data-rating='2' onclick="change_rating(this.getAttribute('data-rating'));" title="it was ok"></a>
+		<a href="#" class="star starOff" data-rating='1' onclick="change_rating(this.getAttribute('data-rating'));" title="did not like it"></a>
+	</div>
+	<p class="small_link">Rate this book</p>
+	{% endif %}
+	    </div> <!-- RATING CONTAINER end-->
+{% endif %}

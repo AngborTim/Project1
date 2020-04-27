@@ -1,0 +1,138 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+    <form action="/register" id="registration_form" method="post" novalidate>
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" id="username" name="username" placeholder="Username" type="text">
+            <div id="username_error" class="invalid-feedback">
+                Please choose a username.
+            </div>
+            <div id="username_OK" class="valid-feedback">
+                Username is available.
+            </div>
+        </div>
+        <div class="form-group">
+            <input class="form-control" id="password" name="password" placeholder="Password" type="password">
+            <div id="password_error" class="invalid-feedback">
+                Please enter a password.
+            </div>
+            <div id="password_OK" class="valid-feedback">
+                Password is OK.
+            </div>
+        </div>
+        <div class="form-group">
+            <input class="form-control" id="confirmation" name="confirmation" placeholder="Confirmation" type="password">
+            <div id="confirmation_error" class="invalid-feedback">
+                Please enter your password again.
+            </div>
+            <div id="confirmation_OK" class="valid-feedback">
+                Confirmation is OK.
+            </div>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Register</button>
+
+    </form>
+
+<script>
+
+    document.getElementById('registration_form').addEventListener('submit', function(event){
+        event.preventDefault();
+        user_name = document.getElementById("username").value;
+        if (check_name(user_name) == false){
+         return false;
+        }
+        pass = document.getElementById("password").value;
+        if (check_pass(pass) == false){
+         return false;
+        }
+        conf = document.getElementById("confirmation").value;
+        if (check_conf(conf, pass) == false){
+         return false;
+        }
+        send_form();
+    });
+
+    document.getElementById('username').addEventListener('blur', function(event){
+        user_name = document.getElementById("username").value;
+        if (check_name(user_name) == false){
+        }
+    });
+
+    document.getElementById('password').addEventListener('blur', function(event){
+        pass = document.getElementById("password").value;
+        if (check_pass(pass) == false){
+        }
+    });
+
+    document.getElementById('confirmation').addEventListener('blur', function(event){
+        conf = document.getElementById("confirmation").value;
+        pass = document.getElementById("password").value;
+        if (check_conf(conf, pass) == false){
+        }
+    });
+
+
+function send_form(){
+    document.getElementById("registration_form").submit();
+}
+
+
+function check_pass(pass){
+    if (pass != ""){
+        document.getElementById('password').classList.remove('is-invalid');
+        document.getElementById('password').classList.add('is-valid');
+        return true;
+    }
+    else {
+        document.getElementById('password').classList.remove('is-valid');
+        document.getElementById('password').classList.add('is-invalid');
+        return false;
+    }
+}
+
+function check_conf(conf, pass){
+    if (conf == pass && conf != ""){
+        document.getElementById('confirmation').classList.remove('is-invalid');
+        document.getElementById('confirmation').classList.add('is-valid');
+        return true;
+    }
+    else {
+        document.getElementById('confirmation').classList.remove('is-valid');
+        document.getElementById('confirmation').classList.add('is-invalid');
+        return false;
+    }
+}
+
+
+function check_name(username){
+    if (user_name != ""){
+        $.get( "check", { username } )
+            .done(function( data ) {
+                if (data == false){
+                    document.getElementById('username').classList.remove('is-valid');
+                    document.getElementById('username').classList.add('is-invalid');
+                    document.getElementById('username_error').innerHTML = 'This username is unavailable';
+                    return false;
+                }
+                if (data == true){
+                    document.getElementById('username').classList.remove('is-invalid');
+                    document.getElementById('username').classList.add('is-valid');
+                    return true;
+                }
+        });
+   }
+   else {
+        document.getElementById('username').classList.remove('is-valid');
+        document.getElementById('username').classList.add('is-invalid');
+        document.getElementById("username_error").innerHTML = 'Please choose a username.';
+        return false;
+   }
+}
+
+</script>
+{% endblock %}

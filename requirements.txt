@@ -1,0 +1,5 @@
+Flask
+Flask-Session
+jsonify
+psycopg2-binary
+SQLAlchemy
