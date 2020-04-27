@@ -5,6 +5,10 @@ nav .navbar-brand
     font-size: xx-large;
 }
 
+img.logo{
+width:64px;
+padding:5px;
+}
 
 main .form-control
 {
