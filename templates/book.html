@@ -71,7 +71,6 @@ ISBN: {{ book.isbn }}</h6>
     </div> <!-- RATING CONTAINER end-->
     
     <div id="review_container">
-	<form id="my_rating">
 		<div class="form-group">
 		{% if review != None and review.review != None %}
 			<textarea onkeypress="changed();" class="form-control" id="review_text" placeholder="Your review" rows="3">{{ review.review }}</textarea>
@@ -79,13 +78,11 @@ ISBN: {{ book.isbn }}</h6>
 			<textarea onkeypress="changed();" class="form-control" id="review_text" placeholder="Your review" rows="3"></textarea>
 		{% endif %}
 		</div>
-		<button id="save" onclick="review_save();" class="btn btn-primary mb-2" title="Save your review" disabled >Save</button>
-	</form>
+		<button data-container="body" data-toggle="popover" data-placement="top" data-content="All changes saved..." id="save" onclick="review_save();" class="btn btn-primary mb-2" title="Save your review" disabled >Save</button>
 	</div><!-- REVIEW CONTAINER end-->
 
     </div>
   </div>
- 
 <script>
 
 function changed(){
@@ -96,22 +93,20 @@ function changed(){
 
 function review_save(){
  var review_text = document.getElementById("review_text").value;
- console.log(review_text);
-    if (review_text == "")
-        return;
-  $.post("{{ url_for('change_review') }}",
-  {
-    book_id: {{ book.id }},
-    review_text: review_text
-  },
-  function(data, status){
-    if (status == "success"){
-		document.getElementById('review_container').innerHTML = data;
-	}
-    else
-		alert("ERROR. Changing rating" + "\nStatus: " + status);
-  });     
- 
+    $.post("{{ url_for('change_review') }}",
+     {
+       book_id: {{ book.id }},
+       review_text: review_text
+     },
+     function(data, status){
+     if (status == "success"){
+          document.getElementById('review_container').innerHTML = data;
+          var btn_save = document.getElementById("save");
+          btn_save.setAttribute("disabled","disabled");
+     }
+     else
+        alert("ERROR. Changing review" + "\nStatus: " + status);
+     });     
 }
 
 

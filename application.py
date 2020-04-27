@@ -55,12 +55,12 @@ def search():
 
 @app.route("/change_review", methods=["POST"])
 def change_review():
-    print (f"post {request.form.get('review_text')}")
     book_id = request.form.get('book_id')
     review_text = request.form.get('review_text')
+    print(f"Text: {review_text} book: {book_id}")
     if book_id and review_text:
         if db.execute("SELECT * FROM reviews WHERE book_id = :book_id AND user_id = :user_id", {"book_id": book_id, "user_id": session["user_id"]}).rowcount != 0:
-            if db.execute("UPDATE reviews SET rating = :rating WHERE book_id = :book_id AND user_id = :user_id",{"rating" : rating, "book_id": book_id, "user_id": session["user_id"]}):
+            if db.execute("UPDATE reviews SET review = :review_text WHERE book_id = :book_id AND user_id = :user_id",{"review_text" : review_text, "book_id": book_id, "user_id": session["user_id"]}):
                 db.commit()
                 review = db.execute("SELECT * FROM reviews WHERE book_id = :book_id AND user_id = :user_id", {"book_id": book_id, "user_id": session["user_id"]}).fetchone()
                 return render_template("review.html",  review=review, book_id=book_id)
@@ -68,10 +68,10 @@ def change_review():
                 return render_template("review.html",  message="Problem with UPDATE")
         
         else: 
-            new_id = db.execute("INSERT INTO reviews (book_id, user_id, rating) VALUES (:book_id, :user_id, :rating, :review_text) RETURNING id",
-                {"book_id":book.id,
+            new_id = db.execute("INSERT INTO reviews (book_id, user_id, review) VALUES (:book_id, :user_id, :review_text) RETURNING id",
+                {"book_id":book_id,
                  "user_id":session["user_id"],
-                 "rating":rating})
+                 "review_text":review_text})
             db.commit()
             if new_id != 0:
                 review = db.execute("SELECT * FROM reviews WHERE book_id = :book_id AND user_id = :user_id", {"book_id": book_id, "user_id": session["user_id"]}).fetchone()
@@ -86,7 +86,6 @@ def change_review():
 def change_rating():
     book_id = request.form.get('book_id')
     rating = request.form.get('rating')
-    print(f"Text: {review_text}")
     if book_id and rating and int(rating) >=0 and int(rating) <6:
         if db.execute("SELECT * FROM reviews WHERE book_id = :book_id AND user_id = :user_id", {"book_id": book_id, "user_id": session["user_id"]}).rowcount != 0:
             if db.execute("UPDATE reviews SET rating = :rating WHERE book_id = :book_id AND user_id = :user_id",{"rating" : rating, "book_id": book_id, "user_id": session["user_id"]}):
@@ -98,7 +97,7 @@ def change_rating():
         
         else: 
             new_id = db.execute("INSERT INTO reviews (book_id, user_id, rating) VALUES (:book_id, :user_id, :rating, :review_text) RETURNING id",
-                {"book_id":book.id,
+                {"book_id":book_id,
                  "user_id":session["user_id"],
                  "rating":rating})
             db.commit()

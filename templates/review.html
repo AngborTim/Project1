@@ -1,4 +1,3 @@
-    <div id="review_container">
 	<form id="my_rating">
 		<div class="form-group">
 		{% if review and review.review != None %}
@@ -7,6 +6,5 @@
 			<textarea onkeypress="review_save();" class="form-control" id="review_text" placeholder="Your review" rows="3"></textarea>
 		{% endif %}
 		</div>
-		<button id="save" class="btn btn-primary mb-2" title="Save your review">Save</button>
+		<button onclick="review_save();" id="save" class="btn btn-primary mb-2" title="Save your review">Save</button>
 	</form>
-	</div><!-- REVIEW CONTAINER end-->
