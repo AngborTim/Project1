@@ -78,6 +78,20 @@ span:empty, a:empty, div:empty
 	vertical-align:top
 }
 
+.h_idn{
+	visibility: hidden;
+	font-family:"Lato", "Helvetica Neue", "Helvetica", sans-serif;
+	font-size:13px;
+	color:#000
+}
+
+.v_sbl{
+	visibility: visible;
+	font-family:"Lato", "Helvetica Neue", "Helvetica", sans-serif;
+	font-size:13px;
+	color:#000
+}
+
 .ratings
 {
 	text-align: left;

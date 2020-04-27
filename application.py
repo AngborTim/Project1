@@ -52,13 +52,17 @@ def search():
         else:
             return render_template("index.html", noresult = "No results.")
 
+@app.route("/my_reviews", methods=["GET"])
+def my_reviews():
+    return render_template("my_reviews.html")
+
+
 
 @app.route("/change_review", methods=["POST"])
 def change_review():
     book_id = request.form.get('book_id')
     review_text = request.form.get('review_text')
-    print(f"Text: {review_text} book: {book_id}")
-    if book_id and review_text:
+    if book_id:
         if db.execute("SELECT * FROM reviews WHERE book_id = :book_id AND user_id = :user_id", {"book_id": book_id, "user_id": session["user_id"]}).rowcount != 0:
             if db.execute("UPDATE reviews SET review = :review_text WHERE book_id = :book_id AND user_id = :user_id",{"review_text" : review_text, "book_id": book_id, "user_id": session["user_id"]}):
                 db.commit()
@@ -96,7 +100,7 @@ def change_rating():
                 return render_template("rating.html",  message="Problem with UPDATE")
         
         else: 
-            new_id = db.execute("INSERT INTO reviews (book_id, user_id, rating) VALUES (:book_id, :user_id, :rating, :review_text) RETURNING id",
+            new_id = db.execute("INSERT INTO reviews (book_id, user_id, rating) VALUES (:book_id, :user_id, :rating) RETURNING id",
                 {"book_id":book_id,
                  "user_id":session["user_id"],
                  "rating":rating})

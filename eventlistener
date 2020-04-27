@@ -15,3 +15,5 @@ for (const star of stars) {
 
 
 
+          var div_ok = document.getElementById("div_ok");
+          div_ok.setAttribute("class", "shown");

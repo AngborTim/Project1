@@ -46,7 +46,7 @@ ISBN: {{ book.isbn }}</h6>
 
 <div id="rating_container">
 	
-	{% if review != None and review.rating != 0 %}
+	{% if review != None and review.rating != None and review.rating>0  %}
 	<div class="stars">	
 	{% for z in range(5) %}
 	{# сначала сравниваем округленный рейтинг INT с циклом #}
@@ -70,25 +70,28 @@ ISBN: {{ book.isbn }}</h6>
 	{% endif %}
     </div> <!-- RATING CONTAINER end-->
     
+    <div id="div_ok" class='h_idn'>All changes saved</div>
+    
     <div id="review_container">
 		<div class="form-group">
 		{% if review != None and review.review != None %}
-			<textarea onkeypress="changed();" class="form-control" id="review_text" placeholder="Your review" rows="3">{{ review.review }}</textarea>
+			<textarea class="form-control" id="review_text" placeholder="Your review" rows="3">{{ review.review }}</textarea>
 		{% else %}
-			<textarea onkeypress="changed();" class="form-control" id="review_text" placeholder="Your review" rows="3"></textarea>
+			<textarea class="form-control" id="review_text" placeholder="Your review" rows="3"></textarea>
 		{% endif %}
 		</div>
-		<button data-container="body" data-toggle="popover" data-placement="top" data-content="All changes saved..." id="save" onclick="review_save();" class="btn btn-primary mb-2" title="Save your review" disabled >Save</button>
+		<button id="save" onclick="review_save();" class="btn btn-primary mb-2" disabled >Save</button>
 	</div><!-- REVIEW CONTAINER end-->
 
     </div>
   </div>
 <script>
 
-function changed(){
+var textarea = document.getElementById('review_text');
+textarea.addEventListener('keydown', (e) => {
   var btn_save = document.getElementById("save");
   btn_save.removeAttribute("disabled");
-}
+});
 
 
 function review_save(){
@@ -103,6 +106,8 @@ function review_save(){
           document.getElementById('review_container').innerHTML = data;
           var btn_save = document.getElementById("save");
           btn_save.setAttribute("disabled","disabled");
+          document.getElementById("div_ok").setAttribute('class', 'v_sbl');
+          setTimeout("document.getElementById('div_ok').setAttribute('class','h_idn');", 4000);
      }
      else
         alert("ERROR. Changing review" + "\nStatus: " + status);

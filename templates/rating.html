@@ -2,7 +2,7 @@
 <div>Error: {{ message }}<br />Try to reload this page.</div>
 
 {% else %}
-	{% if review != None and review.rating != 0 %}
+	{% if review != None and review.rating != None and review.rating>0 %} 
 	<div class="stars">	
 	{% for z in range(5) %}
 	{# сначала сравниваем округленный рейтинг INT с циклом #}
