@@ -1,9 +1,9 @@
 	<form id="my_rating">
 		<div class="form-group">
 		{% if review and review.review != None %}
-			<textarea onkeypress="review_save();" class="form-control" id="review_text" placeholder="Your review" rows="3">{{ review.review }}</textarea>
+			<textarea onkeypress="review_save();" class="form-control" id="review_text" placeholder="Your review" rows="8">{{ review.review }}</textarea>
 		{% else %}
-			<textarea onkeypress="review_save();" class="form-control" id="review_text" placeholder="Your review" rows="3"></textarea>
+			<textarea onkeypress="review_save();" class="form-control" id="review_text" placeholder="Your review" rows="8"></textarea>
 		{% endif %}
 		</div>
 		<button id="save" onclick="review_save();" class="btn btn-primary mb-2" disabled >Save</button>

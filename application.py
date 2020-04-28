@@ -130,11 +130,15 @@ def books(book_id):
     """Lists details about a book."""
     book = db.execute("SELECT * FROM books WHERE id = :id", {"id": book_id}).fetchone()
     review = db.execute("SELECT * FROM reviews WHERE book_id = :book_id AND user_id = :user_id", {"book_id": book_id, "user_id": session["user_id"]}).fetchone()
+
+
+
+    others_reviews = db.execute("SELECT r.rating, r.review, u.username, CASE WHEN length(review) > 15 THEN substr(review, 1, 15) || ' ...' ELSE review END short_review FROM reviews as r, users as u WHERE r.book_id = :book_id AND r.user_id != :user_id AND r.user_id = u.id", {"book_id": book_id, "user_id": session["user_id"]}).fetchall()
     if book is None:
         return render_template("index.html", noresult = "There is no a book")
     import requests
     res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "eFmttVNjVbGJJYPv11W0jA", "isbns": book.isbn})
-    return render_template("book.html", book=book, reviews=res.json(), review=review)
+    return render_template("book.html", book=book, reviews=res.json(), review=review, others_reviews=others_reviews)
 
 
 @app.route("/login", methods=["GET", "POST"])

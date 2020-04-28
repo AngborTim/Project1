@@ -70,6 +70,15 @@ font-family:"Lato", "Helvetica Neue", "Helvetica", sans-serif;
 font-size:13px;
 }
 
+
+span.more{
+
+font-family:"Lato", "Helvetica Neue", "Helvetica", sans-serif;
+font-size:13px;
+color:#0000ff;
+font-weight: bold
+}
+
 span:empty, a:empty, div:empty
 {
 	width:15px;
