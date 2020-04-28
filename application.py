@@ -68,6 +68,7 @@ def my_reviews():
 
 
 @app.route("/change_review", methods=["POST"])
+@login_required
 def change_review():
     book_id = request.form.get('book_id')
     review_text = request.form.get('review_text')
@@ -96,6 +97,7 @@ def change_review():
 
 
 @app.route("/change_rating", methods=["POST"])
+@login_required
 def change_rating():
     book_id = request.form.get('book_id')
     rating = request.form.get('rating')
@@ -212,11 +214,9 @@ def register():
             flash('Username ' + request.form.get("username") + ' already exists')
             return redirect("/register")
 
-        # добавляем нового юзера, при этом используем RETURNING. Без fetchone() не работало, видимо надо было 
-        # конкретизировать что только одна строка возвращается
-        new_id = db.execute("INSERT INTO users (username, hash) VALUES (:u_name, :hashh) RETURNING id",
-                          {"hashh": generate_password_hash(request.form.get("password"), "sha256"),
-                          "u_name": request.form.get("username")}).fetchone()
+        user_name = request.form.get("username")
+        hashh = generate_password_hash(request.form.get("password"), "sha256")
+        new_id = db.execute("INSERT INTO users (username, hash) VALUES (:u_name, :hashh) RETURNING id", {"u_name": user_name, "hashh": hashh}).fetchone()
         db.commit()
 
         if not new_id:
@@ -224,10 +224,20 @@ def register():
             return redirect("/register")
         else:
             session.clear()
-            session["user_id"] = new_id
+            session["user_id"] = new_id[0] # если без индекса, то возвращало странный формат типа (4,)
             flash('You were successfully registred')
             return redirect("/")
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("/register.html")
+        
+@app.route("/check", methods=["GET"])
+def check():
+    name_test = db.execute("SELECT username FROM users WHERE username = :test_name",
+                           {"test_name":request.args.get('username')}).fetchone()
+
+    if name_test:
+        return jsonify(False)
+    else:
+        return jsonify(True)
