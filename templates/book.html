@@ -4,87 +4,102 @@
 
 {% block main %}
 
-<div class="container">
-  <div class="row">
-    <div class="col-md-auto">
-      <img width="180px" height="298px" alt="'{{ book.title }}' by {{ book.author }}" class="img-thumbnail img-fluid" src="http://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg">
-    </div>
-    <div class="col-md-auto">
-      <h2>{{ book.title }}</h2>
-<h4 class="text-muted"><span class="by">by</span> {{ book.author }}</h4>
 
-<div class="ratings">
- {% for z in range(5) %}
-	{# сначала сравниваем округленный рейтинг INT с циклом #}
-	{% if reviews['books'][0]['average_rating']|int > z %}
-		<span class="starRedOn"></span>
-	{# теперь проверяем, если рейтинг - это не целое #}
-	{% elif reviews['books'][0]['average_rating']|float > z %}
-		{# рисуем полвинку, меньше половинки или больше половинки звезды в зависимости от рейтинга #}
-		{% if reviews['books'][0]['average_rating']|float - reviews['books'][0]['average_rating']|int == 0.5 %}
-		<span class="starHalf"></span>
-		{% elif 0.5 > reviews['books'][0]['average_rating']|float - reviews['books'][0]['average_rating']|int %}
-		<span class="starHalfMinus"></span>
-		{% else %}
-		<span class="starHalfPlus"></span>
-		{% endif %}
-	{% else %}
-		<span class="starOff"></span>
-	{% endif %}
- {% endfor %}
-<p>{{ reviews['books'][0]['average_rating'] }}<br />{{ reviews['books'][0]['work_ratings_count'] }} ratings</p>
+<div class="container">
+	<div class="row">
+		<div class="col-md-8">
+			<div class="row">
+				<div class="col-md-auto">
+					<img width="180px" height="298px" alt="'{{ book.title }}' by {{ book.author }}" class="img-thumbnail img-fluid" src="http://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg">
+				</div>
+				<div class="col-md-auto">
+					<h2>{{ book.title }}</h2>
+					<h4 class="text-muted"><span class="by">by</span> {{ book.author }}</h4>
+
+					<div class="ratings">
+					{% for z in range(5) %}
+					{# сначала сравниваем округленный рейтинг INT с циклом #}
+						{% if reviews['books'][0]['average_rating']|int > z %}
+						<span class="starRedOn"></span>
+					{# теперь проверяем, если рейтинг - это не целое #}
+						{% elif reviews['books'][0]['average_rating']|float > z %}
+					{# рисуем полвинку, меньше половинки или больше половинки звезды в зависимости от рейтинга #}
+							{% if reviews['books'][0]['average_rating']|float - reviews['books'][0]['average_rating']|int == 0.5 %}
+						<span class="starHalf"></span>
+							{% elif 0.5 > reviews['books'][0]['average_rating']|float - reviews['books'][0]['average_rating']|int %}
+						<span class="starHalfMinus"></span>
+							{% else %}
+						<span class="starHalfPlus"></span>
+							{% endif %}
+						{% else %}
+						<span class="starOff"></span>
+						{% endif %}
+					{% endfor %}
+						<p>{{ reviews['books'][0]['average_rating'] }}<br />{{ reviews['books'][0]['work_ratings_count'] }} ratings</p>
+					</div>
+
+					<h6>Published {{ book.year }}<br />
+					ISBN: {{ book.isbn }}</h6>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+				sdfsdfsdf
+				sdf
+				sdfsdf
+				sdf
+				sdf
+				sd
+				fs
+				dfs
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<h3>Your rating</h3>
+
+			<div id="rating_container">
+	
+			{% if review != None and review.rating != None and review.rating>0  %}
+				<div class="stars">	
+				{% for z in range(5) %}
+			{# сначала сравниваем округленный рейтинг INT с циклом #}
+					{% if review.rating|int > z %}
+					<span class="starYellowOn"></span>	
+					{% else %}
+					<span class="starOff"></span>
+					{% endif %}
+				{% endfor %}
+				</div>
+				<p><a href="#" data-rating='0' onclick="change_rating(this.getAttribute('data-rating'));" class="small_link" title="It will drop your rating">Delete your rating</a></p>
+			{% else %}
+				<div class="stars d-inline-flex flex-row-reverse">
+					<a href="#" class="star starOff"  data-rating='5' onclick="change_rating(this.getAttribute('data-rating'));" title="it was amazing" href=""></a>
+					<a href="#" class="star starOff"  data-rating='4' onclick="change_rating(this.getAttribute('data-rating'));" title="really liked it" href=""></a>
+					<a href="#" class="star starOff"  data-rating='3' onclick="change_rating(this.getAttribute('data-rating'));" title="liked it" href=""></a>
+					<a href="#" class="star starOff"  data-rating='2' onclick="change_rating(this.getAttribute('data-rating'));" title="it was ok" href=""></a>
+					<a href="#" class="star starOff"  data-rating='1' onclick="change_rating(this.getAttribute('data-rating'));" title="did not like it" href=""></a>
+				</div>
+				<p class="small_link">Rate this book</p>
+			{% endif %}
+			</div> <!-- RATING CONTAINER end-->
+    
+			<div id="div_ok" class='h_idn'>All changes saved</div>
+    
+			<div id="review_container">
+				<div class="form-group">
+				{% if review != None and review.review != None %}
+					<textarea class="form-control" id="review_text" placeholder="Your review" rows="3">{{ review.review }}</textarea>
+				{% else %}
+					<textarea class="form-control" id="review_text" placeholder="Your review" rows="3"></textarea>
+				{% endif %}
+				</div>
+				<button id="save" onclick="review_save();" class="btn btn-primary mb-2" disabled >Save</button>
+			</div><!-- REVIEW CONTAINER end-->
+		</div>
+	</div>
 </div>
 
-<h6>Published {{ book.year }}<br />
-ISBN: {{ book.isbn }}</h6>
-
-    </div>
-    
-    <div class="col-md-auto">
-
-<h3>Your rating</h3>
-
-<div id="rating_container">
-	
-	{% if review != None and review.rating != None and review.rating>0  %}
-	<div class="stars">	
-	{% for z in range(5) %}
-	{# сначала сравниваем округленный рейтинг INT с циклом #}
-		{% if review.rating|int > z %}
-		<span class="starYellowOn"></span>	
-		{% else %}
-		<span class="starOff"></span>
-		{% endif %}
-		{% endfor %}
-	</div>
-	<p><a href="#" data-rating='0' onclick="change_rating(this.getAttribute('data-rating'));" class="small_link" title="It will drop your rating">Delete your rating</a></p>
-	{% else %}
-	<div class="stars d-inline-flex flex-row-reverse">
-		<a href="#" class="star starOff"  data-rating='5' onclick="change_rating(this.getAttribute('data-rating'));" title="it was amazing" href=""></a>
-		<a href="#" class="star starOff"  data-rating='4' onclick="change_rating(this.getAttribute('data-rating'));" title="really liked it" href=""></a>
-		<a href="#" class="star starOff"  data-rating='3' onclick="change_rating(this.getAttribute('data-rating'));" title="liked it" href=""></a>
-		<a href="#" class="star starOff"  data-rating='2' onclick="change_rating(this.getAttribute('data-rating'));" title="it was ok" href=""></a>
-		<a href="#" class="star starOff"  data-rating='1' onclick="change_rating(this.getAttribute('data-rating'));" title="did not like it" href=""></a>
-	</div>
-	<p class="small_link">Rate this book</p>
-	{% endif %}
-    </div> <!-- RATING CONTAINER end-->
-    
-    <div id="div_ok" class='h_idn'>All changes saved</div>
-    
-    <div id="review_container">
-		<div class="form-group">
-		{% if review != None and review.review != None %}
-			<textarea class="form-control" id="review_text" placeholder="Your review" rows="3">{{ review.review }}</textarea>
-		{% else %}
-			<textarea class="form-control" id="review_text" placeholder="Your review" rows="3"></textarea>
-		{% endif %}
-		</div>
-		<button id="save" onclick="review_save();" class="btn btn-primary mb-2" disabled >Save</button>
-	</div><!-- REVIEW CONTAINER end-->
-
-    </div>
-  </div>
 <script>
 
 var textarea = document.getElementById('review_text');
