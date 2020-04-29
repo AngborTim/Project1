@@ -28,6 +28,14 @@ main tfoot
     font-weight: bold;
 }
 
+#modal_review{
+   text-align: justify;
+}
+
+.point {
+cursor: pointer;
+}
+
 table 
 {
 	text-align: justify;

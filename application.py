@@ -131,14 +131,35 @@ def books(book_id):
     book = db.execute("SELECT * FROM books WHERE id = :id", {"id": book_id}).fetchone()
     review = db.execute("SELECT * FROM reviews WHERE book_id = :book_id AND user_id = :user_id", {"book_id": book_id, "user_id": session["user_id"]}).fetchone()
 
-
-
-    others_reviews = db.execute("SELECT r.rating, r.review, u.username, CASE WHEN length(review) > 15 THEN substr(review, 1, 15) || ' ...' ELSE review END short_review FROM reviews as r, users as u WHERE r.book_id = :book_id AND r.user_id != :user_id AND r.user_id = u.id", {"book_id": book_id, "user_id": session["user_id"]}).fetchall()
+    others_reviews = db.execute("SELECT r.rating, r.review, u.username, CASE WHEN length(review) > 20 THEN substr(review, 1, 20) || ' ...' ELSE review END short_review FROM reviews as r, users as u WHERE r.book_id = :book_id AND r.user_id != :user_id AND r.user_id = u.id", {"book_id": book_id, "user_id": session["user_id"]}).fetchall()
     if book is None:
         return render_template("index.html", noresult = "There is no a book")
     import requests
     res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "eFmttVNjVbGJJYPv11W0jA", "isbns": book.isbn})
     return render_template("book.html", book=book, reviews=res.json(), review=review, others_reviews=others_reviews)
+
+
+@app.route("/api/<string:isbn>")
+@login_required
+def books_api(isbn):
+    book_info = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn": isbn})
+    if book_info.rowcount == 0:
+        return jsonify({"error":"invalid ISBN"}), 404
+    else:
+        book = book_info.fetchone()
+        return jsonify({"title":book.title,
+                "author":book.author,
+                "year":book.year,
+                "isbn":book.isbn,
+                "review_count":10,
+                "average_score":10}), 200
+
+
+select books.isbn, books.title, books.author, 
+books.year, reviews.rating, SUM(reviews.rating), AVG(reviews.rating) 
+FROM books, reviews 
+WHERE isbn = '0380795272'
+GROUP BY  books.isbn, books.title, books.author, books.year, reviews.rating
 
 
 @app.route("/login", methods=["GET", "POST"])

@@ -45,49 +45,49 @@
 			<div class="row">
 				<div class="col-12 border">
 
-
-<h3>Reviews</h3>
-<table class="table table-hover compact" id="others_reviews">
-    <thead>
-        <tr>
-            <th scope="col">Username</th>
-            <th scope="col">Rating</th>
-            <th scope="col">Review</th>
-        </tr>
-    </thead>
-{% if others_reviews %}
-    <tbody>
-
-        {% for others_review in others_reviews %}
-        <tr class="click">
-            <td>{{ others_review.username }}</td>
-            <td>
-			{% if others_review.rating>0 %}
-           	<div class="stars">	
-			{% for z in range(5) %}
-				{% if others_review.rating|int > z %}
-				<span class="starYellowOn"></span>	
-				{% else %}
-				<span class="starOff"></span>
-				{% endif %}
-			{% endfor %}
-			</div>
-			{% endif %}
-			</td>
-            <td>{{ others_review.short_review }} <button data-rating="{{ others_review.rating }}" data-username="{{ others_review.username }}" data-review="{{ others_review.review }}" type="button" class="badge badge-info" data-toggle="modal" data-target="#review_modal">more</button></td>
-        </tr>
-        {% endfor %}
-    </tbody>
- {% endif %}
-
-</table>
-
-
-
+					<h3>Reviews</h3>
+					<table class="table table-hover compact" id="others_reviews">
+						<thead>
+							<tr>
+								<th scope="col">Username</th>
+								<th scope="col">Rating</th>
+								<th scope="col">Review</th>
+							</tr>
+						</thead>
+					{% if others_reviews %}
+						<tbody>
+					
+							{% for others_review in others_reviews %}
+							<tr>
+								<td>{{ others_review.username }}</td>
+								<td>
+								{% if others_review.rating>0 %}
+								<div class="stars">	
+								{% for z in range(5) %}
+									{% if others_review.rating|int > z %}
+									<span class="starYellowOn"></span>	
+									{% else %}
+									<span class="starOff"></span>
+									{% endif %}
+								{% endfor %}
+								</div>
+								{% endif %}
+								</td>
+								{% if others_review.short_review !="" %}
+								<td>{{ others_review.short_review }} <button data-rating="{{ others_review.rating }}" data-username="{{ others_review.username }}" data-review="{{ others_review.review }}" type="button" class="badge badge-info point" data-toggle="modal" data-target="#review_modal">more</button></td>
+								{% else %}
+								<td></td>
+								{% endif %}
+							</tr>
+							{% endfor %}
+						</tbody>
+					{% endif %}
+					</table>
 
 				</div>
 			</div>
 		</div>
+
 		<div class="col-md-4 border">
 			<h3>Your rating</h3>
 
@@ -138,7 +138,7 @@
 
 <!-- MODAL -->
 <div class="modal fade" id="review_modal" tabindex="-1" role="dialog" aria-labelledby="review_modal_Label" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="review_modal_Label"></h5>
@@ -147,14 +147,11 @@
         </button>
       </div>
       <div class="modal-body">
-        <form>
-          <div class="form-group">
-            <label for="recipient-name" class="col-form-label">Recipient:</label>
-            <input type="text" class="form-control" id="recipient-name">
+          <div id="modal_rating">
+          
           </div>
-          <div class="form-group">
-            <label for="message-text" class="col-form-label">Message:</label>
-            <textarea class="form-control" id="message-text"></textarea>
+          <hr>
+          <div id="modal_review">
           </div>
         </form>
       </div>
@@ -175,10 +172,19 @@ $('#review_modal').on('show.bs.modal', function (event) {
   var review = button.data('review')
   var rating = button.data('rating')
   var username = button.data('username')
-  
+  $( ".inner" ).append( "<p>Test</p>" );
   var modal = $(this)
-  modal.find('.modal-title').text('Review by ' + username)
-  modal.find('.modal-body input').val(review)
+  modal.find('.modal-title').text('Review by "' + username+ '"')
+  modal.find('#modal_review').text(review)
+  modal.find('#modal_rating').empty()
+  for (var i = 0; i  < 5; i++){
+	if (rating > i ) {
+		modal.find('#modal_rating').append("<span class='starYellowOn'></span>")
+	}
+	else {
+		modal.find('#modal_rating').append("<span class='starOff'></span>")
+	}
+  }
 })
 
 
