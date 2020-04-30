@@ -142,24 +142,22 @@ def books(book_id):
 @app.route("/api/<string:isbn>")
 @login_required
 def books_api(isbn):
-    book_info = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn": isbn})
-    if book_info.rowcount == 0:
+    print(f"{isbn}")
+    if db.execute("SELECT id from books where isbn = :isbn",{"isbn": isbn}).rowcount == 0:
         return jsonify({"error":"invalid ISBN"}), 404
     else:
-        book = book_info.fetchone()
-        return jsonify({"title":book.title,
-                "author":book.author,
-                "year":book.year,
-                "isbn":book.isbn,
-                "review_count":10,
-                "average_score":10}), 200
-
-
-select books.isbn, books.title, books.author, 
-books.year, reviews.rating, SUM(reviews.rating), AVG(reviews.rating) 
-FROM books, reviews 
-WHERE isbn = '0380795272'
-GROUP BY  books.isbn, books.title, books.author, books.year, reviews.rating
+        book_info  = db.execute("SELECT * from books WHERE isbn = :isbn",{"isbn": isbn}).fetchone()
+        rating = db.execute("SELECT COUNT (CASE WHEN reviews.rating >0 THEN reviews.rating ELSE NULL END) as rc, CAST(SUM (reviews.rating) AS DEC(3,2)) / COUNT (CASE WHEN reviews.rating >0 THEN reviews.rating ELSE NULL END) as average from reviews WHERE book_id = :book_id", {"book_id" : book_info.id}).fetchone()
+        if not rating.average:
+            average = 0
+        else:
+            average = rating.average
+        return jsonify({"title":book_info.title,
+                "author":book_info.author,
+                "year":book_info.year,
+                "isbn":book_info.isbn,
+                "review_count":rating.rc,
+                "average_score":average}), 200
 
 
 @app.route("/login", methods=["GET", "POST"])
