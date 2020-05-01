@@ -56,9 +56,9 @@ def search():
         if request.form.get("search_str") != '':
             req = request.form.get("search_str")
             books = db.execute("SELECT id, isbn, title, author, year FROM books WHERE isbn like :search_str OR title like :search_str OR author like :search_str ORDER BY title, author, year", 
-                          {"search_str": req+'%'}).fetchall()
+                          {"search_str": "%" +req+"%"}).fetchall()
             cnt = db.execute("SELECT count(*) as cnt FROM books WHERE isbn like :search_str OR title like :search_str OR author like :search_str", 
-                          {"search_str": request.form.get("search_str")+'%'}).fetchone()
+                          {"search_str": "%" +req+"%"}).fetchone()
             return render_template("index.html", books = books, cnt = cnt.cnt, req = req)
         else:
             return render_template("index.html", noresult = "No results.")
