@@ -119,6 +119,13 @@ span:empty, a:empty, div:empty
 	vertical-align: middle;
 }
 
+.query
+{
+	text-align: left;
+	vertical-align: middle;
+	color: #000099
+}
+
 .stars
 {
     display: inline-block;

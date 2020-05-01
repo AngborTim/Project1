@@ -54,11 +54,16 @@ def index():
 def search():
     if request.method == "POST":
         if request.form.get("search_str") != '':
-            books = db.execute("SELECT * FROM books WHERE title LIKE :search_str", 
-                          {"search_str": '%'+request.form.get("search_str")+'%'}).fetchall()
-            return render_template("index.html", books = books)
+            req = request.form.get("search_str")
+            books = db.execute("SELECT id, isbn, title, author, year FROM books WHERE isbn like :search_str OR title like :search_str OR author like :search_str ORDER BY title, author, year", 
+                          {"search_str": req+'%'}).fetchall()
+            cnt = db.execute("SELECT count(*) as cnt FROM books WHERE isbn like :search_str OR title like :search_str OR author like :search_str", 
+                          {"search_str": request.form.get("search_str")+'%'}).fetchone()
+            return render_template("index.html", books = books, cnt = cnt.cnt, req = req)
         else:
             return render_template("index.html", noresult = "No results.")
+    if request.method == "GET":
+        return redirect("/")
 
 @app.route("/my_reviews", methods=["GET"])
 @login_required
@@ -130,8 +135,8 @@ def books(book_id):
     """Lists details about a book."""
     book = db.execute("SELECT * FROM books WHERE id = :id", {"id": book_id}).fetchone()
     review = db.execute("SELECT * FROM reviews WHERE book_id = :book_id AND user_id = :user_id", {"book_id": book_id, "user_id": session["user_id"]}).fetchone()
-
-    others_reviews = db.execute("SELECT r.rating, r.review, u.username, CASE WHEN length(review) > 20 THEN substr(review, 1, 20) || ' ...' ELSE review END short_review FROM reviews as r, users as u WHERE r.book_id = :book_id AND r.user_id != :user_id AND r.user_id = u.id", {"book_id": book_id, "user_id": session["user_id"]}).fetchall()
+    """тут делаем вложенный запрос IN чтобы удалить строки пользователей, которые удалили и рейтинг и отзыв """
+    others_reviews = db.execute("SELECT r.rating, r.review, u.username, CASE WHEN length(review) > 20 THEN substr(review, 1, 20) || ' ...' ELSE review END short_review FROM reviews as r, users as u WHERE r.user_id IN(select r.user_id where r.review != '' or r.rating > 0 ) AND r.book_id = :book_id AND r.user_id != :user_id AND r.user_id = u.id", {"book_id": book_id, "user_id": session["user_id"]}).fetchall()
     if book is None:
         return render_template("index.html", noresult = "There is no a book")
     import requests

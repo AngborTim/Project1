@@ -44,7 +44,7 @@
 			</div>
 			<div class="row">
 				<div class="col-12 border">
-
+					{% if others_reviews %}
 					<h3>Reviews</h3>
 					<table class="table table-hover compact" id="others_reviews">
 						<thead>
@@ -54,9 +54,8 @@
 								<th scope="col">Review</th>
 							</tr>
 						</thead>
-					{% if others_reviews %}
+
 						<tbody>
-					
 							{% for others_review in others_reviews %}
 							<tr>
 								<td>{{ others_review.username }}</td>
@@ -81,9 +80,9 @@
 							</tr>
 							{% endfor %}
 						</tbody>
-					{% endif %}
-					</table>
 
+					</table>
+					{% endif %}
 				</div>
 			</div>
 		</div>
