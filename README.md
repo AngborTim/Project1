@@ -1,6 +1,5 @@
 # Project 1
-This is my Project 1. I've tried to fit in 5 minutes, it was tough :) And today I almost forgot how to speak English.
-This project allows users search for books using ISBN, title or author. The search is case sensitive. It means result of 'Dee' and 'dee' will be different. Result is presented as a table. By clicking on a row user will redirect to books details page.
+TThis project allows users to search books in data base using ISBN, title or author. The search is case sensitive. It means result of 'Dee' and 'dee' will be different. Result is presented as a table. By clicking on a row user will redirect to books details page.
 This page has three blocks:
 * Book info
 * User's reviews if any (except current user)
