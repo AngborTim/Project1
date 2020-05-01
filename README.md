@@ -1,16 +1,18 @@
 # Project 1
+This is my Project 1. I've tried to fit in 5 minutes, it was tough :) And today I almost forgot how to speak English.
 This project allows users search for books using ISBN, title or author. The search is case sensitive. It means result of 'Dee' and 'dee' will be different. Result is presented as a table. By clicking on a row user will redirect to books details page.
 This page has three blocks:
-Book info
-User's reviews if any (except current user)
-Current user review. Here user can vote by clicking on stars and can write a review. He can chose to do both action or only one of them.
+* Book info
+* User's reviews if any (except current user)
+* Current user review. Here user can vote by clicking on stars and can write a review. He can chose to do both action or only one of them.
 My review page shows reviews of current user. Every row is clickable, by clicking you will redirect to chosen book page.
 
 For using this program you have to register.
 Registration requires username, password and password confirmation. If username was already chosen by other user, or password and its confirmation are not equal, system will show alarm message.
-After registration user can search, write revies etc.
+After registration user can search, write reviews etc.
 Once register, user can login using his username and password.
 User can logout for finishing his work.
+For using API you don't need to be register. If you use wrong ISBN number you will get error message and 404 status.
 
 .
 application.py - main program
