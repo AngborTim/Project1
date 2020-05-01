@@ -1,5 +1,5 @@
 # Project 1
-TThis project allows users to search books in data base using ISBN, title or author. The search is case sensitive. It means result of 'Dee' and 'dee' will be different. Result is presented as a table. By clicking on a row user will redirect to books details page.
+This project allows users to search books in data base using ISBN, title or author. The search is case sensitive. It means result of 'Dee' and 'dee' will be different. Result is presented as a table. By clicking on a row user will be redirected to the book details page.
 This page has three blocks:
 * Book info
 * User's reviews if any (except current user)
